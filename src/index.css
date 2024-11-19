@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.backgroundMobile {
+  background-image: url("../public/hairYimg.webp");
+  background-size: cover;
+  background-position: center;
+}
