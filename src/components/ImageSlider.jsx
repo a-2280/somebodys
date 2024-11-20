@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 
-function ImageSlider({ imageUrls }) {
-  const [imageIndex, setImageIndex] = useState(0);
+function ImageSlider({ videoUrls }) {
+  const [videoIndex, setVideoIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  // Create array with duplicated first image at the end
-  const extendedUrls = [...imageUrls, imageUrls[0]];
+  // Create an array with the duplicated first video at the end
+  const extendedUrls = [...videoUrls, videoUrls[0]];
 
   const handleTransitionEnd = () => {
-    if (imageIndex === imageUrls.length) {
+    if (videoIndex === videoUrls.length) {
       setIsTransitioning(true);
-      setImageIndex(0);
+      setVideoIndex(0);
       // Reset transition after jumping back
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -22,28 +22,29 @@ function ImageSlider({ imageUrls }) {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setImageIndex((i) => (i + 1) % (imageUrls.length + 1));
-    }, 2000);
+      setVideoIndex((i) => (i + 1) % (videoUrls.length + 1));
+    }, 5000);
     return () => clearInterval(timer);
-  }, [imageUrls.length]);
+  }, [videoUrls.length]);
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full relative overflow-hidden">
       <div
-        className="w-full h-full flex overflow-hidden"
+        className="w-full h-full flex"
         onTransitionEnd={handleTransitionEnd}
+        style={{
+          transform: `translateX(-${100 * videoIndex}%)`,
+          transition: isTransitioning ? "none" : "transform 0.5s ease-in-out",
+        }}
       >
         {extendedUrls.map((url, index) => (
-          <img
-            key={`slide-${index}-${url}`}
+          <video
+            key={`slide-${index}`}
             src={url}
-            className="w-full h-full object-contain flex-shrink-0 flex-grow-0 slider-image"
-            style={{
-              translate: `${-100 * imageIndex}%`,
-              transition: isTransitioning
-                ? "none"
-                : "translate 0.5s ease-in-out",
-            }}
+            autoPlay
+            muted
+            loop
+            className="w-full h-full object-contain flex-shrink-0 flex-grow-0"
           />
         ))}
       </div>
